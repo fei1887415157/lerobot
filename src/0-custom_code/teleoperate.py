@@ -3,6 +3,7 @@ from lerobot.robots.so101_follower import SO101FollowerConfig, SO101Follower
 
 
 
+# Plug in Leader first, Follower second.
 teleop_config = SO101LeaderConfig(
     port="/dev/ttyACM0",
     id="leader",
