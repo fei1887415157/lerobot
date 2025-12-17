@@ -9,7 +9,7 @@ teleop_config = SO101LeaderConfig(
 )
 
 robot_config = SO101FollowerConfig(
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
     id="follower",
 )
 
