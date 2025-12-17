@@ -5,11 +5,12 @@ from lerobot.cameras.configs import ColorMode, Cv2Rotation
 # Construct an `OpenCVCameraConfig` with your desired FPS, resolution, color mode, and rotation.
 config = OpenCVCameraConfig(
     index_or_path=0,
-    fps=15,
-    width=1920,
-    height=1080,
+    fps=30,
+    width=1280,
+    height=720,
     color_mode=ColorMode.RGB,
-    rotation=Cv2Rotation.NO_ROTATION
+    rotation=Cv2Rotation.NO_ROTATION,
+    fourcc="MJPG"
 )
 
 # Instantiate and connect an `OpenCVCamera`, performing a warm-up read (default).
