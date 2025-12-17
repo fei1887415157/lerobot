@@ -18,7 +18,7 @@ if x == "L":
 elif x == "F":
     from lerobot.robots.so101_follower import SO101FollowerConfig, SO101Follower
     config = SO101FollowerConfig(
-        port="/dev/tty",
+        port="/dev/ttyACM0",
         id="follower",
     )
     follower = SO101Follower(config)
