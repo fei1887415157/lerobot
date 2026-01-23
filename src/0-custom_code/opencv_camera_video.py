@@ -10,7 +10,7 @@ import time
 
 # Logi C270
 camera_index = 2
-width = 640
+width = 853
 height = 480
 fps_target = 30
 fourcc_code = 'MJPG'
