@@ -13,8 +13,8 @@ robot_config = SO101FollowerConfig(
     id="follower",
     port="/dev/ttyACM1",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=30, fourcc='MJPG'),
-        "2": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=30, fourcc='MJPG')
+        "0": OpenCVCameraConfig(index_or_path=0, width=640, height=360, fps=30, fourcc='MJPG'),
+        "2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=30, fourcc='MJPG')
     }
 )
 
