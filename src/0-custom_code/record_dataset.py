@@ -9,7 +9,6 @@ from lerobot.utils.utils import log_say
 from lerobot.utils.visualization_utils import init_rerun
 from lerobot.scripts.lerobot_record import record_loop
 from lerobot.processor import make_default_processors
-import os
 
 
 
@@ -28,8 +27,8 @@ robot_config = SO101FollowerConfig(
     id="follower",
     port="/dev/ttyACM1",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=0, width=640, height=360, fps=FPS, fourcc='MJPG'),
-        "2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc='MJPG')
+        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc='MJPG'),
+        #"2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc='MJPG')
     }
 )
 
@@ -45,22 +44,16 @@ obs_features = hw_to_dataset_features(robot.observation_features, "observation")
 dataset_features = {**action_features, **obs_features}
 
 repo_id = "fei1887415157/test_dataset"
-local_dir = "/home/robobond/.cache/huggingface/lerobot/fei1887415157/test_dataset"
 
-if os.path.exists(local_dir):
-    # LOAD: This keeps existing episodes and appends new ones
-    dataset = LeRobotDataset(repo_id)
-    print("Existing dataset found. Appending new episodes.")
-else:
-    # CREATE: Only runs the very first time
-    dataset = LeRobotDataset.create(
-        repo_id=repo_id,
-        fps=FPS,
-        features=dataset_features,
-        robot_type=robot.name,
-        use_videos=True
-    )
-    print("Created a brand new dataset.")
+# overwrite
+dataset = LeRobotDataset.create(
+    repo_id=repo_id,
+    fps=FPS,
+    features=dataset_features,
+    robot_type=robot.name,
+    use_videos=True
+)
+print("Created a brand new dataset.")
 
 # Initialize the keyboard listener and rerun visualization
 _, events = init_keyboard_listener()
