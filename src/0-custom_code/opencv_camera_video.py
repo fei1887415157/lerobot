@@ -1,60 +1,50 @@
 import cv2
 import time
 
-# The Other Camera
-# camera_index = 0
-# width = 1280
-# height = 720
-# fps_target = 30
-# fourcc_code = 'MJPG'
-
 # Logi C270
-camera_index = 2
-width = 853
-height = 480
-fps_target = 30
-fourcc_code = 'MJPG'
+cam1_id, w1, h1 = 2, 640, 360
+# Secondary
+cam2_id, w2, h2 = 0, 640, 360
 
-cap = cv2.VideoCapture(camera_index)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
-cap.set(cv2.CAP_PROP_FPS, fps_target)
-cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*fourcc_code))
+def setup_camera(idx, w, h):
+    cap = cv2.VideoCapture(idx)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+    return cap
 
-actual_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-actual_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-window_title = f"Camera {camera_index} - {actual_w}x{actual_h}"
+cap1 = setup_camera(cam1_id, w1, h1)
+cap2 = setup_camera(cam2_id, w2, h2)
 
-# Variables for smoothed FPS
 prev_time = time.time()
-display_fps = 0
 frame_count = 0
-update_interval = 0.5  # Seconds
+display_fps = 0
 
 while True:
-    ret, frame = cap.read()
-    if not ret:
+    ret1, frame1 = cap1.read()
+    ret2, frame2 = cap2.read()
+
+    if not ret1 or not ret2:
         break
 
-    # Calculate time elapsed
-    current_time = time.time()
-    elapsed = current_time - prev_time
+    # Performance Tracking
     frame_count += 1
-
-    # Update the display value only every 0.5s
-    if elapsed >= update_interval:
+    elapsed = time.time() - prev_time
+    if elapsed >= 0.5:
         display_fps = frame_count / elapsed
-        frame_count = 0
-        prev_time = current_time
+        frame_count, prev_time = 0, time.time()
 
-    # Display FPS in green
-    cv2.putText(frame, f"FPS: {display_fps:.1f}", (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    # Overlay FPS on both frames
+    for f in [frame1, frame2]:
+        cv2.putText(f, f"FPS: {display_fps:.1f}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-    cv2.imshow(window_title, frame)
+    cv2.imshow("Camera 1", frame1)
+    cv2.imshow("Camera 2", frame2)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-cap.release()
+cap1.release()
+cap2.release()
 cv2.destroyAllWindows()
