@@ -1,10 +1,17 @@
 import cv2
 import time
 
-# Configuration
+# The Other Camera
+# camera_index = 0
+# width = 1280
+# height = 720
+# fps_target = 30
+# fourcc_code = 'MJPG'
+
+# Logi C270
 camera_index = 2
-width = 1280
-height = 720
+width = 640
+height = 480
 fps_target = 30
 fourcc_code = 'MJPG'
 
