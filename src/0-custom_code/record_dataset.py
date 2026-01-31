@@ -12,20 +12,20 @@ from lerobot.processor import make_default_processors
 
 
 
-TASK_DESCRIPTION = "test task"
+TASK_DESCRIPTION = "Rebar Tying"
 NUM_EPISODES = 3
-EPISODE_TIME_SEC = 5
-RESET_TIME_SEC = 5
+EPISODE_TIME_SEC = 600
+RESET_TIME_SEC = 600
 FPS = 30
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
     cameras={
         "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc='MJPG'),
         #"2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc='MJPG')
