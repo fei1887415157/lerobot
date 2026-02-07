@@ -151,8 +151,14 @@ class SO101Follower(Robot):
             self.bus.configure_motors()
             for motor in self.bus.motors:
                 self.bus.write("Operating_Mode", motor, OperatingMode.POSITION.value)
-                # Set Max Voltage Limit to 17V (Value: 170) for 4S battery
+
+                # Set Max Voltage Limit to 17 V (Value: 170) for 4S battery
                 self.bus.write("Max_Voltage_Limit", motor, 170)
+
+                # Set Protection Current to 3.6 A (stall current at 4S) (Value: 3600/6.5*2, unit is ~6.5mA)
+                import math
+                self.bus.write("Protection_Current", motor, math.floor(3600/6.5)*2)
+
                 # Set P_Coefficient to lower value to avoid shakiness (Default is 32)
                 self.bus.write("P_Coefficient", motor, 16)
                 # Set I_Coefficient and D_Coefficient to default value 0 and 32
