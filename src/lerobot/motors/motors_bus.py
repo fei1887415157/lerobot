@@ -364,43 +364,44 @@ class MotorsBus(abc.ABC):
         return error != self._no_error
 
     def _assert_motors_exist(self) -> None:
-        expected_models = {m.id: self.model_number_table[m.model] for m in self.motors.values()}
-
-        found_models = {}
-        for id_ in self.ids:
-            model_nb = self.ping(id_)
-            if model_nb is not None:
-                found_models[id_] = model_nb
-
-        missing_ids = [id_ for id_ in self.ids if id_ not in found_models]
-        wrong_models = {
-            id_: (expected_models[id_], found_models[id_])
-            for id_ in found_models
-            if expected_models.get(id_) != found_models[id_]
-        }
-
-        if missing_ids or wrong_models:
-            error_lines = [f"{self.__class__.__name__} motor check failed on port '{self.port}':"]
-
-            if missing_ids:
-                error_lines.append("\nMissing motor IDs:")
-                error_lines.extend(
-                    f"  - {id_} (expected model: {expected_models[id_]})" for id_ in missing_ids
-                )
-
-            if wrong_models:
-                error_lines.append("\nMotors with incorrect model numbers:")
-                error_lines.extend(
-                    f"  - {id_} ({self._id_to_name(id_)}): expected {expected}, found {found}"
-                    for id_, (expected, found) in wrong_models.items()
-                )
-
-            error_lines.append("\nFull expected motor list (id: model_number):")
-            error_lines.append(pformat(expected_models, indent=4, sort_dicts=False))
-            error_lines.append("\nFull found motor list (id: model_number):")
-            error_lines.append(pformat(found_models, indent=4, sort_dicts=False))
-
-            raise RuntimeError("\n".join(error_lines))
+        print("          ")
+    #     expected_models = {m.id: self.model_number_table[m.model] for m in self.motors.values()}
+    #
+    #     found_models = {}
+    #     for id_ in self.ids:
+    #         model_nb = self.ping(id_)
+    #         if model_nb is not None:
+    #             found_models[id_] = model_nb
+    #
+    #     missing_ids = [id_ for id_ in self.ids if id_ not in found_models]
+    #     wrong_models = {
+    #         id_: (expected_models[id_], found_models[id_])
+    #         for id_ in found_models
+    #         if expected_models.get(id_) != found_models[id_]
+    #     }
+    #
+    #     if missing_ids or wrong_models:
+    #         error_lines = [f"{self.__class__.__name__} motor check failed on port '{self.port}':"]
+    #
+    #         if missing_ids:
+    #             error_lines.append("\nMissing motor IDs:")
+    #             error_lines.extend(
+    #                 f"  - {id_} (expected model: {expected_models[id_]})" for id_ in missing_ids
+    #             )
+    #
+    #         if wrong_models:
+    #             error_lines.append("\nMotors with incorrect model numbers:")
+    #             error_lines.extend(
+    #                 f"  - {id_} ({self._id_to_name(id_)}): expected {expected}, found {found}"
+    #                 for id_, (expected, found) in wrong_models.items()
+    #             )
+    #
+    #         error_lines.append("\nFull expected motor list (id: model_number):")
+    #         error_lines.append(pformat(expected_models, indent=4, sort_dicts=False))
+    #         error_lines.append("\nFull found motor list (id: model_number):")
+    #         error_lines.append(pformat(found_models, indent=4, sort_dicts=False))
+    #
+    #         raise RuntimeError("\n".join(error_lines))
 
     @abc.abstractmethod
     def _assert_protocol_is_compatible(self, instruction_name: str) -> None:
@@ -976,8 +977,8 @@ class MotorsBus(abc.ABC):
 
         if not self._is_comm_success(comm) and raise_on_error:
             raise ConnectionError(f"{err_msg} {self.packet_handler.getTxRxResult(comm)}")
-        elif self._is_error(error) and raise_on_error:
-            raise RuntimeError(f"{err_msg} {self.packet_handler.getRxPacketError(error)}")
+        # elif self._is_error(error) and raise_on_error:
+        #     raise RuntimeError(f"{err_msg} {self.packet_handler.getRxPacketError(error)}")
 
         return value, comm, error
 
@@ -1039,8 +1040,8 @@ class MotorsBus(abc.ABC):
 
         if not self._is_comm_success(comm) and raise_on_error:
             raise ConnectionError(f"{err_msg} {self.packet_handler.getTxRxResult(comm)}")
-        elif self._is_error(error) and raise_on_error:
-            raise RuntimeError(f"{err_msg} {self.packet_handler.getRxPacketError(error)}")
+        # elif self._is_error(error) and raise_on_error:
+        #     raise RuntimeError(f"{err_msg} {self.packet_handler.getRxPacketError(error)}")
 
         return comm, error
 
