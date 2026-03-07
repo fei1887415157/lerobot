@@ -7,7 +7,18 @@ def setup_camera(idx, w, h):
     cap = cv2.VideoCapture(idx)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+    
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    success = cap.set(cv2.CAP_PROP_FOURCC, fourcc)
+    
+    # Get the actual fourcc after setting
+    actual_fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))
+    # Convert integer to 4-character string
+    fourcc_str = "".join([chr((actual_fourcc >> 8 * i) & 0xFF) for i in range(4)])
+    
+    print(f"Camera {idx}: Set FOURCC 'H264' success: {success}")
+    print(f"Camera {idx}: Current FOURCC: {fourcc_str} ({actual_fourcc})")
+    
     return cap
 
 cap1 = setup_camera(cam1_id, w1, h1)
