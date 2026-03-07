@@ -9,26 +9,28 @@ from lerobot.utils.utils import log_say
 from lerobot.utils.visualization_utils import init_rerun
 from lerobot.scripts.lerobot_record import record_loop
 from lerobot.processor import make_default_processors
+import sys
 
 
 
 TASK_DESCRIPTION = "Rebar Tying"
-NUM_EPISODES = 3
+NUM_EPISODES = 1
 EPISODE_TIME_SEC = 600
 RESET_TIME_SEC = 600
 FPS = 30
+FOURCC = 'MJPG'
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc='MJPG'),
-        #"2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc='MJPG')
+        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc=FOURCC),
+        #"2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc=FOURCC)
     }
 )
 
@@ -57,7 +59,9 @@ print("Created a brand new dataset.")
 
 # Initialize the keyboard listener and rerun visualization
 _, events = init_keyboard_listener()
-init_rerun(session_name="recording")
+
+# Disable rerun visualizer since gpu is too weak
+#init_rerun(session_name="recording")
 
 # Connect the robot and teleoperator
 robot.connect()
@@ -67,6 +71,11 @@ teleop.connect()
 teleop_action_processor, robot_action_processor, robot_observation_processor = make_default_processors()
 
 episode_idx = 0
+
+
+
+print("Waiting for robot arm movement. Press right arrow for next episode, left for redo, esc for stop.")
+
 while episode_idx < NUM_EPISODES and not events["stop_recording"]:
     log_say(f"Recording episode {episode_idx + 1} of {NUM_EPISODES}")
 
@@ -116,4 +125,6 @@ while episode_idx < NUM_EPISODES and not events["stop_recording"]:
 log_say("Stop recording")
 robot.disconnect()
 teleop.disconnect()
+dataset.finalize()
 dataset.push_to_hub()
+sys.exit(0)
