@@ -14,23 +14,23 @@ import sys
 
 
 TASK_DESCRIPTION = "Rebar Tying"
-NUM_EPISODES = 1
-EPISODE_TIME_SEC = 600
-RESET_TIME_SEC = 600
+NUM_EPISODES = 3
+EPISODE_TIME_SEC = 60
+RESET_TIME_SEC = 60
 FPS = 30
 FOURCC = 'MJPG'
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc=FOURCC),
-        #"2": OpenCVCameraConfig(index_or_path=2, width=640, height=360, fps=FPS, fourcc=FOURCC)
+        "0": OpenCVCameraConfig(index_or_path=1, width=1280, height=720, fps=FPS, fourcc=FOURCC),
+        "1": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc=FOURCC)
     }
 )
 
