@@ -23,14 +23,14 @@ import draccus
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LambdaLR, LRScheduler
 
-from lerobot.datasets.utils import write_json
+from lerobot.datasets.io_utils import write_json
 from lerobot.utils.constants import SCHEDULER_STATE
 from lerobot.utils.io_utils import deserialize_json_into_object
 
 
 @dataclass
 class LRSchedulerConfig(draccus.ChoiceRegistry, abc.ABC):
-    num_warmup_steps: int
+    num_warmup_steps: int | None
 
     @property
     def type(self) -> str:
