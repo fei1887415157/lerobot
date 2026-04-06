@@ -1,7 +1,7 @@
 import cv2
 import time
 
-cam1_id, w1, h1 = 0, 640, 360
+cam1_id, w1, h1 = 2, 640, 360
 
 def setup_camera(idx, w, h):
     cap = cv2.VideoCapture(idx)

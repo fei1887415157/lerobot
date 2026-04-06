@@ -22,15 +22,15 @@ FOURCC = 'MJPG'
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=1, width=1280, height=720, fps=FPS, fourcc=FOURCC),
-        "1": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc=FOURCC)
+        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc=FOURCC),
+        "2": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc=FOURCC)
     }
 )
 
