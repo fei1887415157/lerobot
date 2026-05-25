@@ -18,16 +18,16 @@ NUM_EPISODES = 3
 EPISODE_TIME_SEC = 60
 RESET_TIME_SEC = 60
 FPS = 30
-FOURCC = 'MJPG'
+FOURCC = "MJPG"
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
     cameras={
         "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc=FOURCC),
         #"2": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc=FOURCC)
@@ -54,7 +54,8 @@ dataset = LeRobotDataset.create(
     fps=FPS,
     features=dataset_features,
     robot_type=robot.name,
-    use_videos=True
+    use_videos=True,
+    image_writer_threads=4,
 )
 print("Created a brand new dataset.")
 
