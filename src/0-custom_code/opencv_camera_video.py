@@ -3,6 +3,8 @@ import time
 
 cam1_id, w1, h1 = 2, 640, 360
 
+print(cv2.getBuildInformation())
+
 def setup_camera(idx, w, h):
     cap = cv2.VideoCapture(idx)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
