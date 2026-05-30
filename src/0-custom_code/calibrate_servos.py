@@ -3,7 +3,7 @@ x = input("Calibrate leader (L) or follower (F) ?")
 
 
 if x == "L":
-    from lerobot.teleoperators.so101_leader import SO101LeaderConfig, SO101Leader
+    from lerobot.teleoperators.so_leader import SO101LeaderConfig, SO101Leader
     config = SO101LeaderConfig(
         port="/dev/ttyACM0",
         id="leader",
@@ -16,9 +16,9 @@ if x == "L":
 
 
 elif x == "F":
-    from lerobot.robots.so101_follower import SO101FollowerConfig, SO101Follower
+    from lerobot.robots.so_follower import SO101FollowerConfig, SO101Follower
     config = SO101FollowerConfig(
-        port="/dev/ttyACM0",
+        port="/dev/ttyACM1",
         id="follower",
     )
     follower = SO101Follower(config)
