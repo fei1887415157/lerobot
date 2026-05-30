@@ -1,3 +1,4 @@
+from lerobot.cameras import Cv2Backends
 from lerobot.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 from lerobot.datasets.feature_utils import hw_to_dataset_features
@@ -15,25 +16,24 @@ import sys
 
 TASK_DESCRIPTION = "Rebar Tying"
 NUM_EPISODES = 3
-EPISODE_TIME_SEC = 60
-RESET_TIME_SEC = 60
+EPISODE_TIME_SEC = 5
+RESET_TIME_SEC = 5
 FPS = 30
-FOURCC = "MJPG"
+
 
 teleop_config = SO101LeaderConfig(
     id="leader",
-    port="/dev/ttyACM1",
+    port="/dev/ttyACM0",
 )
 
 robot_config = SO101FollowerConfig(
     id="follower",
-    port="/dev/ttyACM0",
+    port="/dev/ttyACM1",
     cameras={
-        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc=FOURCC),
-        #"2": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc=FOURCC)
+        "0": OpenCVCameraConfig(index_or_path=0, width=1280, height=720, fps=FPS, fourcc="MJPG", backend=Cv2Backends.V4L2),
+        "2": OpenCVCameraConfig(index_or_path=2, width=1280, height=720, fps=FPS, fourcc="MJPG", backend=Cv2Backends.V4L2)
     }
 )
-
 
 
 
@@ -56,13 +56,15 @@ dataset = LeRobotDataset.create(
     robot_type=robot.name,
     use_videos=True,
     image_writer_threads=4,
+    video_backend="V4L2",
+    vcodec="libsvtav1"
 )
 print("Created a brand new dataset.")
 
 # Initialize the keyboard listener and rerun visualization
 _, events = init_keyboard_listener()
 
-# Disable rerun visualizer since gpu is too weak
+# Disable rerun visualizer since ram too small
 #init_rerun(session_name="recording")
 
 # Connect the robot and teleoperator
@@ -75,8 +77,14 @@ teleop_action_processor, robot_action_processor, robot_observation_processor = m
 episode_idx = 0
 
 
-
 print("Waiting for robot arm movement. Press right arrow for next episode, left for redo, esc for stop.")
+
+
+
+for cam_name, cam_cfg in robot_config.cameras.items():
+    print(f"Camera {cam_name} using backend: {cam_cfg.backend} and fourcc: {cam_cfg.fourcc}")
+
+
 
 while episode_idx < NUM_EPISODES and not events["stop_recording"]:
     log_say(f"Recording episode {episode_idx + 1} of {NUM_EPISODES}")
